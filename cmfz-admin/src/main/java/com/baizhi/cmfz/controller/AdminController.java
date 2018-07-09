@@ -52,8 +52,8 @@ public class AdminController {
                 resp.addCookie(c1);
                 resp.addCookie(c2);
             }
-
-            return "ok";
+            session.setAttribute("loginAdmin",admin);
+            return "redirect:/main/main.jsp";
         } catch (Exception e) {
             e.printStackTrace();
             session.setAttribute("errorMsg","用户名或密码错误，请重新登录！");

@@ -21,6 +21,11 @@
         </mvc:message-converters>
     </mvc:annotation-driven>
 
+    <!-- Bean解析器,级别高于默认解析器,寻找bean对象进行二次处理-->
+    <bean id='beanNameViewResolver' class='org.springframework.web.servlet.view.BeanNameViewResolver'></bean>
+    <!--easyPOI导入导出用到的类的扫描-->
+    <context:component-scan base-package='org.jeecgframework.poi.excel.view'></context:component-scan>
+
     <bean id="irvr" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="suffix" value=".jsp"></property>
         <property name="prefix" value="/"></property>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.cmfz.dao.ArticleDAO">
+	<!--<cache/>-->
+
+	<!--添加文章-->
+	<insert id="insertArticle" parameterType="Article">
+		<selectKey order="BEFORE" keyProperty="articleId" resultType="java.lang.String">
+			SELECT uuid() FROM dual
+		</selectKey>
+		INSERT INTO t_article
+		VALUES (#{articleId}, #{articleName}, #{articleContent}, sysdate(), #{articleStatus}, #{master.masterId})
+	</insert>
+
+	<!--分页查询文章-->
+	<resultMap id="rm" type="Article">
+		<id property="articleId" column="articleId"/>
+		<result property="articleName" column="articleName"/>
+		<result property="publishDate" column="publishDate"/>
+		<result property="articleStatus" column="articleStatus"/>
+		<association property="master" javaType="Master">
+			<id property="masterId" column="masterId"/>
+			<result property="masterName" column="masterName"/>
+		</association>
+	</resultMap>
+
+	<select id="selectArticleByPage" resultType="Article">
+		SELECT
+			article_id articleId,
+			article_name articleName,
+			publish_date publishDate,
+			article_status articleStatus,
+			t2.master_id masterId,
+			master_name masterName
+		from t_article t1 LEFT JOIN t_master t2
+		on t1.master_id = t2.master_id
+		limit #{begin}, #{offSet}
+
+	</select>
+
+	<!--查询文章表中的总数据条数-->
+	<select id="selectCount" resultType="java.lang.Integer">
+		select count(*) from t_article
+	</select>
+
+</mapper>

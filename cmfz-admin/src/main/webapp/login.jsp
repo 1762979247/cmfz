@@ -21,6 +21,8 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/login.css" type="text/css"></link>
     <script type="text/javascript" src="${pageContext.request.contextPath}/script/jquery.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/script/common.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/script/jquery.validate.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/script/message_zh_CN.js"></script>
 
     <style type="text/css">
         #error{
@@ -29,6 +31,13 @@
             margin-top:-10px;
             color:red;
             font-weight: 600;
+        }
+        form label.error {	/* 表单错误信息的样式 */
+            width: 200px;
+            margin-left: 20px;
+            color: Red;
+            font-size: 12px;
+            font-weight:600;
         }
     </style>
 
@@ -41,7 +50,21 @@
                 $("#captchaImage").prop('src','${pageContext.request.contextPath}/admin/getCode?tm='+Math.random())
             });
 
+            $('#loginForm').validate({
+                rules:{
+                    username:{required:true},
+                    password:{required:true},
+                    vcode:{required:true}
+                },
+                messages:{
+                    username:{required:'请输入用户名！'},
+                    password:{required:'请输入密码！'},
+                    vcode:{required:'请输入密码！'}
+                }
+            })
         });
+
+
     </script>
 </head>
 <body>

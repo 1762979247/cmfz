@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.cmfz.dao.PictureDAO">
+	<!--<cache/>-->
+
+	<select id="selectAll" resultType="Picture">
+		SELECT picture_id pictureId,picture_path picturePath,picture_date pictureDate,picture_description pictureDesc,picture_status pictureStatus
+		FROM t_picture
+		LIMIT #{begin},#{end}
+	</select>
+
+	<select id="selectCount" resultType="java.lang.Integer">
+		SELECT count(*) from t_picture
+	</select>
+
+	<insert id="insertPicture" parameterType="Picture">
+		<selectKey resultType="java.lang.String" order="BEFORE" keyProperty="pictureId">
+			SELECT uuid() from dual
+		</selectKey>
+		INSERT INTO t_picture values(#{pictureId}, #{picturePath}, sysdate(), #{pictureDesc}, #{pictureStatus})
+	</insert>
+	
+</mapper>

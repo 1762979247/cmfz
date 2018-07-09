@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.cmfz.dao.MasterDAO">
+	<!--<cache/>-->
+
+	<!--分页查询上师-->
+	<select id="selectMasterByPage" resultType="Master">
+		SELECT master_id masterId, master_name masterName, master_photo masterPhoto, master_intro masterIntro
+		FROM t_master
+		LIMIT #{begin},#{offSet}
+	</select>
+
+	<!--查询上师表中数据总条数-->
+	<select id="selectCount" resultType="java.lang.Integer">
+		SELECT count(*) from t_master
+	</select>
+
+	<!--查询所有上师,用于poi导出-->
+	<select id="selectAll" resultType="Master">
+		SELECT master_id masterId, master_name masterName, master_photo masterPhoto, master_intro masterIntro
+		FROM t_master
+	</select>
+
+	<!--根据关键字，分页查询上师-->
+	<select id="selectMasterByKeywords" resultType="Master">
+		SELECT master_id masterId, master_name masterName, master_photo masterPhoto, master_intro masterIntro
+		FROM t_master
+		WHERE master_name like concat(concat('%',#{keywords}),'%')
+		LIMIT #{begin},#{offSet}
+	</select>
+
+	<!--根据关键字查询上师表数据条数-->
+	<select id="selectCountByKeywords" resultType="java.lang.Integer">
+		SELECT count(*) from t_master WHERE master_name LIKE concat(concat('%',#{keywords}),'%')
+	</select>
+
+	<!--添加上师-->
+	<insert id="insertMaster" parameterType="Master">
+		<selectKey resultType="java.lang.String" keyProperty="masterId" order="BEFORE">
+			SELECT replace(uuid(),"-","") from dual
+		</selectKey>
+		INSERT INTO t_master VALUES (#{masterId}, #{masterName}, #{masterPhoto}, #{masterIntro,jdbcType=VARCHAR})
+	</insert>
+
+	<!--批量添加上师-->
+	<insert id="batchInsert" parameterType="java.util.List">
+		INSERT INTO t_master VALUES
+		<foreach collection="masters" separator="," item="m">
+			(replace(uuid(),"-",""), #{m.masterName}, #{m.masterPhoto}, #{m.masterIntro})
+		</foreach>
+	</insert>
+
+	<!--更改上师信息-->
+	<update id="updateMaster" parameterType="Master">
+		update t_master set master_name=#{masterName}, master_intro=#{masterIntro} where master_id=#{masterId}
+	</update>
+
+</mapper>
